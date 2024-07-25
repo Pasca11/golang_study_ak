@@ -21,6 +21,9 @@ func (a *CurrentAccount) Deposit(amount float64) error {
 }
 
 func (a *CurrentAccount) Withdraw(amount float64) error {
+	if amount < 0 {
+		return errors.New("negative amount")
+	}
 	if a.balance < amount {
 		return errors.New("not enough funds")
 	}

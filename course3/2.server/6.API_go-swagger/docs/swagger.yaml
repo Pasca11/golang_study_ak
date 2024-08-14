@@ -1,0 +1,58 @@
+basePath: /
+definitions:
+  main.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      house_number:
+        type: string
+      road:
+        type: string
+      state:
+        type: string
+      suburb:
+        type: string
+    type: object
+  main.RequestAddressSearch:
+    properties:
+      lat:
+        type: number
+      lng:
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Sample weather app
+  title: WeatherApi
+  version: "1.0"
+paths:
+  /api/address/search:
+    post:
+      consumes:
+      - application/json
+      description: Search coords by address
+      parameters:
+      - description: House number, road, suburb, city, state, country
+        in: body
+        name: coordinates
+        required: true
+        schema:
+          $ref: '#/definitions/main.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Address
+          schema:
+            type: string
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: SearchCoords
+      tags:
+      - Search
+swagger: "2.0"

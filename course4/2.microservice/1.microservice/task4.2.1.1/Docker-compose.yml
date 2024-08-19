@@ -1,0 +1,28 @@
+version: '1.0'
+
+services:
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    depends_on:
+      - auth_db
+  auth_db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=auth_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  geo:
+    build:
+      context: ./geo
+      dockerfile: Dockerfile
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - auth
+      - geo

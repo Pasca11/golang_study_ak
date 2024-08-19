@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package geo_service;
+
+option go_package = "amir.geo.v1;geov1";
+
+service GeoService {
+  rpc SearchAnswer (RequestAddressSearch) returns (ResponseAddress);
+  rpc GeoCodeAnswer (Address) returns (GetCoords);
+}
+
+message RequestAddressSearch {
+  double lat = 1;
+  double lng = 2;
+}
+
+message ResponseAddress {
+ Address address = 1;
+}
+
+message Address {
+  string house_number = 1;
+  string road = 2;
+  string suburb = 3;
+  string city = 4;
+  string state = 5;
+  string country = 6;
+}
+
+message Cooords {
+  double lat = 1;
+  double lng = 2;
+}
+
+message GetCoords {
+  repeated Cooords coords = 1;
+}

@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"errors"
 	"geoservice/internal/repository"
 	"geoservice/models"
 	"github.com/go-redis/redis"
@@ -54,7 +55,7 @@ func (pc *ProxyCache) GetByName(ctx context.Context, name string) (models.User, 
 	user := models.User{}
 	result, err := pc.Client.Get(name).Result()
 
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		user, exist, err := pc.DataBase.GetByName(ctx, name)
 		if !exist {
 			return user, false, err

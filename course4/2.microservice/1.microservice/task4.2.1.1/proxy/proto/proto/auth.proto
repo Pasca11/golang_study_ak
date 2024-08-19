@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package geo_service;
+
+option go_package = "amir.auth.v1;authv1";
+
+service Auth {
+  rpc Login (User) returns (Token);
+  rpc Register (User) returns (User);
+  rpc ValidateToken (Token) returns (Token);
+}
+
+message User {
+  string Username = 1;
+  string Password = 2;
+}
+
+message Token {
+  string Token = 1;
+}

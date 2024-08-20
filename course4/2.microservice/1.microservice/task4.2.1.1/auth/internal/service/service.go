@@ -81,12 +81,10 @@ func (s *AuthServiceImpl) ValidateToken(ctx context.Context, token *authv1.Token
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
 		}
-		if !token.Valid {
-			return nil, fmt.Errorf("invalid token")
-		}
 		return s.secret, nil
 	})
-	if err != nil {
+
+	if err != nil || !t.Valid {
 		return nil, err
 	}
 	return &authv1.Token{Token: t.Raw}, nil

@@ -13,7 +13,7 @@ import (
 
 func main() {
 	mux := chi.NewRouter()
-	conn, _ := grpc.NewClient("/geo")
+	conn, _ := grpc.NewClient(net.JoinHostPort("geo", "3333"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	conn2, err := grpc.NewClient(net.JoinHostPort("auth", "4444"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal("new client error:", err)

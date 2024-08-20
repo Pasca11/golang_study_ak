@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"proxy/internal/service"
 	"proxy/models"
@@ -84,8 +85,10 @@ func (c *Controller) AuthMiddleware(next http.Handler) http.Handler {
 		}
 		_, err := c.service.ValidateToken(token)
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
+		next.ServeHTTP(w, r)
 	})
 }

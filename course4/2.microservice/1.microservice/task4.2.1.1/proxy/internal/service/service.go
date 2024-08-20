@@ -2,19 +2,16 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"github.com/golang-jwt/jwt"
 	"google.golang.org/grpc"
-	"net/http"
+	"log"
 	authv1 "proxy/proto/gen/auth"
 	"proxy/proto/gen/geo"
-	"strings"
 )
 
 type ProxyService interface {
 	Login(user *authv1.User) (string, error)
-	ValidateToken(stringToken string) (*jwt.Token, error)
+	ValidateToken(stringToken string) (*authv1.Token, error)
 	Register(user *authv1.User) error
 	GeocodeAnswer(address *geo.Address) (*geo.GetCoords, error)
 	SearchAnswer(coordinates *geo.RequestAddressSearch) (*geo.ResponseAddress, error)
@@ -41,15 +38,14 @@ func (s *ProxyServiceImpl) Login(user *authv1.User) (string, error) {
 	return token.Token, nil
 }
 
-func (s *ProxyServiceImpl) ValidateToken(token string) (*jwt.Token, error) {
-	resp, err := http.Post("/auth/validateToken", "application/json", strings.NewReader(token))
+func (s *ProxyServiceImpl) ValidateToken(token string) (*authv1.Token, error) {
+	client := authv1.NewAuthClient(s.AuthgRPC)
+	log.Println("ValidateToken", token)
+	t, err := client.ValidateToken(context.Background(), &authv1.Token{Token: token})
 	if err != nil {
 		return nil, err
 	}
-	var resBody jwt.Token
-	json.NewDecoder(resp.Body).Decode(&resBody)
-
-	return &resBody, nil
+	return t, nil
 }
 
 func (s *ProxyServiceImpl) Register(user *authv1.User) error {
@@ -75,16 +71,12 @@ func (s *ProxyServiceImpl) Register(user *authv1.User) error {
 
 func (s *ProxyServiceImpl) SearchAnswer(coordinates *geo.RequestAddressSearch) (*geo.ResponseAddress, error) {
 	client := geo.NewGeoServiceClient(s.gRPCGeo)
-	req := &geo.RequestAddressSearch{
-		Lat: coordinates.Lat,
-		Lng: coordinates.Lng,
-	}
 
-	res, err := client.SearchAnswer(context.Background(), req)
+	res, err := client.SearchAnswer(context.Background(), coordinates)
 	if err != nil {
+		log.Println("SearchAnswer", err)
 		return nil, err
 	}
-
 	return res, nil
 }
 

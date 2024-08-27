@@ -27,7 +27,6 @@ func main() {
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
-
 	<-sigChan
 	server.GracefulStop()
 	log.Println("Shutting down server...")

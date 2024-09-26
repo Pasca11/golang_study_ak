@@ -13,7 +13,7 @@ services:
       - cache
       - rabbit
     environment:
-      BROKER: "rabbit"
+      BROKER: "kafka"
   kafka-consumer:
     build:
       context: ../KafkaNotification
@@ -35,7 +35,7 @@ services:
       ALLOW_ANONYMOUS_LOGIN: yes
   kafka:
       hostname: kafka
-      image: bitnami/kafka:2.7.0
+      image: bitnami/kafka:latest
       restart: always
       env_file:
         - ./kafka-variables.env

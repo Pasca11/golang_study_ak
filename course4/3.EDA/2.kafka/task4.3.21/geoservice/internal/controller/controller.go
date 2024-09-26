@@ -136,7 +136,6 @@ func (c *Controller) SearchAnswer(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&coordinates)
 
 	token := r.Header.Get("Authorization")[7:]
-
 	status, address, err := c.Servicer.SearchAnswer(token, coordinates)
 	if status == http.StatusTooManyRequests {
 		err = c.Notificator.Notify("Too many requests")

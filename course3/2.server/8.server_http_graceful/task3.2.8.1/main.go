@@ -28,9 +28,7 @@ func main() {
 			log.Fatalf("Server error: %v", err)
 		}
 	}()
-	// Ожидание сигнала остановки
 	<-sigCh
-	// Создание контекста с таймаутом для graceful shutdown
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
